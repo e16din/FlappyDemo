@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Disposable
 class Bird(x: Float, y: Float) : Disposable {
 
     companion object {
+        private const val MOVEMENT = 100f
+
         private const val GRAVITY = -15f
     }
 
@@ -20,7 +22,7 @@ class Bird(x: Float, y: Float) : Disposable {
             velocity.add(0f, GRAVITY, 0f)
         }
         velocity.scl(delta)
-        position.add(0f, velocity.y, 0f)
+        position.add(MOVEMENT * delta, velocity.y, 0f)
         if (position.y < 0) {
             position.y = 0f
         }
