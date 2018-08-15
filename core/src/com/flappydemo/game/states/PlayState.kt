@@ -43,11 +43,17 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
         bird.update(delta)
         camera.position.x = bird.position.x + 80
 
-        tubes.forEach { tube ->
+        for(tube in tubes){
+
             val cameraLeftPosition = camera.position.x - (camera.viewportWidth / 2)
             val tubeRightPosition = tube.posTopTube.x + tube.topTube.width
             if (cameraLeftPosition > tubeRightPosition) {
                 tube.reposition(tube.posTopTube.x + (Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT)
+            }
+
+            if(tube.collides(bird.bounds)){
+                gsm.set(PlayState(gsm))
+                break
             }
         }
 

@@ -1,6 +1,7 @@
 package com.flappydemo.game.sprites
 
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
@@ -17,6 +18,8 @@ class Bird(x: Float, y: Float) : Disposable {
 
     val texture = Texture("bird.png")
 
+    val bounds = Rectangle()
+
     fun update(delta: Float) {
         if (position.y > 0) {
             velocity.add(0f, GRAVITY, 0f)
@@ -28,6 +31,7 @@ class Bird(x: Float, y: Float) : Disposable {
         }
 
         velocity.scl(1 / delta)
+        bounds.setPosition(position.x, position.y)
     }
 
     override fun dispose() {

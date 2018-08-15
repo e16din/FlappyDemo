@@ -21,8 +21,9 @@ class GameStateManager {
     }
 
     fun update(delta: Float) {
-        states.peek().handleInput()
-        states.peek().update(delta)
+        val state = states.peek()
+        state.handleInput()
+        state.update(delta)
     }
 
     fun render(batch: SpriteBatch) {
