@@ -3,6 +3,7 @@ package com.flappydemo.game.states
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.flappydemo.game.FlappyDemo
 import com.flappydemo.game.GameStateManager
@@ -14,13 +15,21 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
     companion object {
         const val TUBE_SPACING = 125f
         const val TUBE_COUNT = 4
+
+        const val GROUND_Y_OFFSET = -30f
     }
 
     private var background = Texture("bg.png")
+    private var ground = Texture("ground.png")
 
     private val bird = Bird(50f, 300f)
 
     private val tubes = Array<Tube>()
+
+    private val groundPos1 = Vector2(calcGroundPos1(), GROUND_Y_OFFSET)
+
+    private val groundPos2 = Vector2(calcGroundPos2(), GROUND_Y_OFFSET)
+
 
     init {
         camera.setToOrtho(false,
@@ -33,6 +42,9 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
         }
     }
 
+    fun calcGroundPos1() = camera.position.x - camera.viewportWidth / 2f
+    fun calcGroundPos2() = groundPos1.x + ground.width
+
     override fun handleInput() {
         if (Gdx.input.justTouched()) {
             bird.jump()
@@ -40,10 +52,11 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
     }
 
     override fun update(delta: Float) {
+        updateGround()
         bird.update(delta)
         camera.position.x = bird.position.x + 80
 
-        for(tube in tubes){
+        for (tube in tubes) {
 
             val cameraLeftPosition = camera.position.x - (camera.viewportWidth / 2)
             val tubeRightPosition = tube.posTopTube.x + tube.topTube.width
@@ -51,10 +64,10 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
                 tube.reposition(tube.posTopTube.x + (Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT)
             }
 
-            if(tube.collides(bird.bounds)){
-                gsm.set(PlayState(gsm))
-                break
-            }
+//            if (tube.collides(bird.bounds)) {
+//                gsm.set(PlayState(gsm))
+//                break
+//            }
         }
 
         camera.update()
@@ -70,7 +83,14 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
 
         drawTubes(batch)
 
+        drawGround(batch)
+
         batch.end()
+    }
+
+    private fun drawGround(batch: SpriteBatch) {
+        batch.draw(ground, groundPos1.x, groundPos1.y)
+        batch.draw(ground, groundPos2.x, groundPos2.y)
     }
 
     private fun drawBackground(batch: SpriteBatch) {
@@ -89,9 +109,20 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
         }
     }
 
+    private fun updateGround() {
+        if (calcGroundPos1() > groundPos1.x + ground.width) {
+            groundPos1.add(ground.width * 2f, 0f)
+        }
+
+        if (calcGroundPos1() > groundPos2.x + ground.width) {
+            groundPos2.add(ground.width * 2f, 0f)
+        }
+    }
+
     override fun dispose() {
         bird.dispose()
         background.dispose()
+        ground.dispose()
         tubes.forEach { tube ->
             tube.dispose()
         }
