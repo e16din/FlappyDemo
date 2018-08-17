@@ -99,7 +99,7 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
     }
 
     private fun drawBird(batch: SpriteBatch) {
-        batch.draw(bird.texture, bird.position.x, bird.position.y)
+        batch.draw(bird.getTexture(), bird.position.x, bird.position.y)
     }
 
     private fun drawTubes(batch: SpriteBatch) {

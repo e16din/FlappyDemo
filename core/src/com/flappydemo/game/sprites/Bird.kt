@@ -1,6 +1,7 @@
 package com.flappydemo.game.sprites
 
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
@@ -16,11 +17,15 @@ class Bird(x: Float, y: Float) : Disposable {
     val position = Vector3(x, y, 0f)
     val velocity = Vector3()
 
-    val texture = Texture("bird.png")
+    val birdAnimationTexture = Texture("birdanimation.png")
 
-    val bounds = Rectangle()
+    val birdAnimation = Animation(TextureRegion(birdAnimationTexture), 3, 0.5f)
+    val bounds = Rectangle(x, y, birdAnimationTexture.width / 3f, birdAnimationTexture.height.toFloat())
+
+    fun getTexture() = birdAnimation.getFrame()
 
     fun update(delta: Float) {
+        birdAnimation.update(delta)
         if (position.y > 0) {
             velocity.add(0f, GRAVITY, 0f)
         }
@@ -35,7 +40,7 @@ class Bird(x: Float, y: Float) : Disposable {
     }
 
     override fun dispose() {
-        texture.dispose()
+        birdAnimationTexture.dispose()
     }
 
     fun jump() {
