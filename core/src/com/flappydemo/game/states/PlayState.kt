@@ -64,10 +64,10 @@ class PlayState(gsm: GameStateManager) : BaseState(gsm) {
                 tube.reposition(tube.posTopTube.x + (Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT)
             }
 
-//            if (tube.collides(bird.bounds)) {
-//                gsm.set(PlayState(gsm))
-//                break
-//            }
+            if (tube.collides(bird.bounds)) {
+                gsm.set(GameOverState(gsm))
+                break
+            }
         }
 
         camera.update()

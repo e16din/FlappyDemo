@@ -1,5 +1,6 @@
 package com.flappydemo.game.sprites
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
@@ -22,6 +23,8 @@ class Bird(x: Float, y: Float) : Disposable {
     val birdAnimation = Animation(TextureRegion(birdAnimationTexture), 3, 0.5f)
     val bounds = Rectangle(x, y, birdAnimationTexture.width / 3f, birdAnimationTexture.height.toFloat())
 
+    val flap = Gdx.audio.newSound(Gdx.files.internal("sfx_wing.ogg"))
+
     fun getTexture() = birdAnimation.getFrame()
 
     fun update(delta: Float) {
@@ -41,9 +44,11 @@ class Bird(x: Float, y: Float) : Disposable {
 
     override fun dispose() {
         birdAnimationTexture.dispose()
+        flap.dispose()
     }
 
     fun jump() {
         velocity.y = 250f
+        flap.play()
     }
 }
